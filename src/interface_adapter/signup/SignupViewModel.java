@@ -31,6 +31,8 @@ public class SignupViewModel extends ViewModel {
     // This is what the Signup Presenter will call to let the ViewModel know
     // to alert the View
     public void firePropertyChanged() {
+//        System.out.println("signup firePropertyChanged execute");
+//        System.out.println("signupState = " + this.state);
         support.firePropertyChange("state", null, this.state);
     }
 

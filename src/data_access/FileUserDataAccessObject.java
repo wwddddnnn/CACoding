@@ -2,6 +2,7 @@ package data_access;
 
 import entity.User;
 import entity.UserFactory;
+import use_case.clear_users.ClearUserDataAccessInterface;
 import use_case.login.LoginUserDataAccessInterface;
 import use_case.signup.SignupUserDataAccessInterface;
 
@@ -11,7 +12,9 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class FileUserDataAccessObject implements SignupUserDataAccessInterface, LoginUserDataAccessInterface {
+public class FileUserDataAccessObject implements SignupUserDataAccessInterface,
+        LoginUserDataAccessInterface,
+        ClearUserDataAccessInterface {
 
     private final File csvFile;
 
@@ -96,4 +99,27 @@ public class FileUserDataAccessObject implements SignupUserDataAccessInterface, 
         return accounts.containsKey(identifier);
     }
 
+    public String getUsernames(){
+        String usernames = "";
+        for(String i : this.accounts.keySet().toArray(new String[0])) usernames += i + ",";
+        return usernames;
+    }
+
+    @Override
+    public void clear() throws IOException {
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(csvFile));
+            writer.write("");
+            writer.close();
+            this.headers.clear();
+            this.accounts.clear();
+            headers.put("username", 0);
+            headers.put("password", 1);
+            headers.put("creation_time", 2);
+
+//            System.out.println("clear successfully");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
